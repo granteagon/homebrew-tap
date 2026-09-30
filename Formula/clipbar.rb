@@ -40,7 +40,8 @@ class Clipbar < Formula
   test do
     assert_equal "ClipBar #{version}", shell_output("#{bin}/clipbar --version").strip
     system "/usr/bin/codesign", "--verify", "--deep", "--strict", libexec/"ClipBar.app"
+    plist = libexec/"ClipBar.app/Contents/Info.plist"
     assert_match "com.granteagon.ClipBar",
-      shell_output("/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' #{libexec}/ClipBar.app/Contents/Info.plist")
+      shell_output("/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' #{plist}")
   end
 end
