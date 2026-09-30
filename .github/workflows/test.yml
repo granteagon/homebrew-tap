@@ -1,0 +1,12 @@
+name: Test formula
+on: [push, pull_request]
+jobs:
+  clipbar:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          brew tap granteagon/tap
+          cp Formula/clipbar.rb "$(brew --repository granteagon/tap)/Formula/clipbar.rb"
+          brew install --build-from-source granteagon/tap/clipbar
+          brew test granteagon/tap/clipbar
