@@ -2,10 +2,24 @@ name: Test formula
 on: [push, pull_request]
 jobs:
   clipbar:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      - run: |
+      - name: Report runner and toolchain
+        run: |
+          uname -m
+          sw_vers
+          xcodebuild -version
+          swift --version
+          clang --version
+          brew config
+      - name: Install released formula from source and test
+        run: |
+          # A fresh runner must not reuse an existing ClipBar installation.
+          if brew list --versions clipbar; then
+            echo "ClipBar is already installed; expected a clean runner" >&2
+            exit 1
+          fi
           brew tap granteagon/tap
           cp Formula/clipbar.rb "$(brew --repository granteagon/tap)/Formula/clipbar.rb"
           brew install --build-from-source granteagon/tap/clipbar
